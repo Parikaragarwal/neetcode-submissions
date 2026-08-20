@@ -1,0 +1,36 @@
+class Solution {
+private:
+    bool possible(
+        vector<int> &nums,
+        int sum,
+        int id,
+        vector<vector<int>> &dp
+    ){
+        int n = nums.size();
+
+        if(sum==0){
+            return true;
+        }
+        if(id==n-1){
+            return nums[id]==sum;
+        }
+        if(sum<0){
+            return false;
+        }
+        if(dp[id][sum]!=-1){
+            return (bool)dp[id][sum];
+        }
+        return dp[id][sum]=(possible(nums,sum-nums[id],id+1,dp) || possible(nums,sum,id+1,dp));
+    }
+public:
+    bool canPartition(vector<int>& nums) {
+        int sum = accumulate(nums.begin(),nums.end(),0);
+        if(sum%2!=0){
+            return false;
+        }
+        int n = nums.size();
+        int target = sum/2;
+        vector<vector<int>> dp(n,vector<int>(target+1,-1));
+        return possible(nums,target,0,dp);
+    }
+};
